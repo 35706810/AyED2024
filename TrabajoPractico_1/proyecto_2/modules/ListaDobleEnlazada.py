@@ -123,35 +123,41 @@ class ListaDobleEnlazada:
     def concatenar(self, otra_lista):
         if otra_lista.cabeza is None:
             return
-        
+
         if self.cabeza is None:
+         
             self.cabeza = otra_lista.cabeza
             self.cola = otra_lista.cola
-        else: 
-            nodo_cabeza_otra_lista = otra_lista.cabeza
-            nueva_cabeza = Nodo(nodo_cabeza_otra_lista.dato)
-            
-            nodo_actual = nodo_cabeza_otra_lista.siguiente
-            nodo_previo = nueva_cabeza
-            while nodo_actual is not None:
-                nuevo_nodo = Nodo(nodo_actual.dato)
-                nodo_previo.siguiente = nuevo_nodo
-                nuevo_nodo.anterior = nodo_previo
-                nodo_previo = nuevo_nodo
-                nodo_actual = nodo_actual.siguiente
-            
-          
-            self.cola.siguiente = nueva_cabeza
-            nueva_cabeza.anterior = self.cola
-            self.cola = nodo_previo
+        else:
+           
+            self.cola.siguiente = otra_lista.cabeza
+            otra_lista.cabeza.anterior = self.cola
+            self.cola = otra_lista.cola
 
         self.tamanio += otra_lista.tamanio
 
+        otra_lista.cabeza = None
+        otra_lista.cola = None
+        otra_lista.tamanio = 0
 
 
     def __add__(self, otra_lista):
-        lista_concatenada = self.copiar()
-        lista_concatenada.concatenar(otra_lista)
-        return lista_concatenada
+        nueva_lista = ListaDobleEnlazada()
+        
+       
+        nodo_actual = self.cabeza
+        while nodo_actual:
+            nueva_lista.agregar_al_final(nodo_actual.dato)
+            nodo_actual = nodo_actual.siguiente
+        
+        
+        nodo_actual = otra_lista.cabeza
+        while nodo_actual:
+            nueva_lista.agregar_al_final(nodo_actual.dato)
+            nodo_actual = nodo_actual.siguiente
+        
+        return nueva_lista
+
+
 
 

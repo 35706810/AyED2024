@@ -1,9 +1,9 @@
 import random
 import time
 import matplotlib.pyplot as plt
-from burbuja import burbuja
-from quicksort import quicksort
-from radix_sort import radix_sort
+from modules import burbuja
+from modules import quicksort
+from modules import radix_sort
 
 # Función para medir los tiempos de ejecución
 def medir_tiempos():
