@@ -45,7 +45,6 @@ class ListaDobleEnlazada:
         if posicion < -self.tamanio or posicion > self.tamanio:
             raise Exception("Posición inválida")
 
-        # Manejar índices negativos
         if posicion < 0:
             posicion = self.tamanio + posicion
 
@@ -74,7 +73,6 @@ class ListaDobleEnlazada:
         if posicion is None:
             posicion = self.tamanio - 1
         else:
-            # Manejar índices negativos
             if posicion < 0:
                 posicion = self.tamanio + posicion
 
@@ -126,19 +124,34 @@ class ListaDobleEnlazada:
         if otra_lista.cabeza is None:
             return
         
-        copia_otra_lista = otra_lista.copiar()
-        
         if self.cabeza is None:
-            self.cabeza = copia_otra_lista.cabeza
-            self.cola = copia_otra_lista.cola
-        else:
-            self.cola.siguiente = copia_otra_lista.cabeza
-            copia_otra_lista.cabeza.anterior = self.cola
-            self.cola = copia_otra_lista.cola
-        
+            self.cabeza = otra_lista.cabeza
+            self.cola = otra_lista.cola
+        else: 
+            nodo_cabeza_otra_lista = otra_lista.cabeza
+            nueva_cabeza = Nodo(nodo_cabeza_otra_lista.dato)
+            
+            nodo_actual = nodo_cabeza_otra_lista.siguiente
+            nodo_previo = nueva_cabeza
+            while nodo_actual is not None:
+                nuevo_nodo = Nodo(nodo_actual.dato)
+                nodo_previo.siguiente = nuevo_nodo
+                nuevo_nodo.anterior = nodo_previo
+                nodo_previo = nuevo_nodo
+                nodo_actual = nodo_actual.siguiente
+            
+          
+            self.cola.siguiente = nueva_cabeza
+            nueva_cabeza.anterior = self.cola
+            self.cola = nodo_previo
+
         self.tamanio += otra_lista.tamanio
+
+
 
     def __add__(self, otra_lista):
         lista_concatenada = self.copiar()
         lista_concatenada.concatenar(otra_lista)
         return lista_concatenada
+
+
