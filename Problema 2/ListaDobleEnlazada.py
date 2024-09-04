@@ -42,8 +42,12 @@ class ListaDobleEnlazada:
         self.tamanio += 1
 
     def insertar(self, dato, posicion):
-        if posicion < 0 or posicion > self.tamanio:
+        if posicion < -self.tamanio or posicion > self.tamanio:
             raise Exception("Posición inválida")
+
+        # Manejar índices negativos
+        if posicion < 0:
+            posicion = self.tamanio + posicion
 
         nuevo_nodo = Nodo(dato)
 
@@ -69,8 +73,13 @@ class ListaDobleEnlazada:
 
         if posicion is None:
             posicion = self.tamanio - 1
-        elif posicion < 0 or posicion >= self.tamanio:
-            raise Exception("Posición inválida")
+        else:
+            # Manejar índices negativos
+            if posicion < 0:
+                posicion = self.tamanio + posicion
+
+            if posicion < 0 or posicion >= self.tamanio:
+                raise Exception("Posición inválida")
 
         if posicion == 0:
             valor = self.cabeza.dato
@@ -116,13 +125,17 @@ class ListaDobleEnlazada:
     def concatenar(self, otra_lista):
         if otra_lista.cabeza is None:
             return
+        
+        copia_otra_lista = otra_lista.copiar()
+        
         if self.cabeza is None:
-            self.cabeza = otra_lista.cabeza
-            self.cola = otra_lista.cola
+            self.cabeza = copia_otra_lista.cabeza
+            self.cola = copia_otra_lista.cola
         else:
-            self.cola.siguiente = otra_lista.cabeza
-            otra_lista.cabeza.anterior = self.cola
-            self.cola = otra_lista.cola
+            self.cola.siguiente = copia_otra_lista.cabeza
+            copia_otra_lista.cabeza.anterior = self.cola
+            self.cola = copia_otra_lista.cola
+        
         self.tamanio += otra_lista.tamanio
 
     def __add__(self, otra_lista):
