@@ -1,8 +1,6 @@
-# medir_tiempos.py
-
 import time
 import matplotlib.pyplot as plt
-from modules import ListaDobleEnlazada
+from modules.ListaDobleEnlazada import ListaDobleEnlazada
 
 def medir_tiempos():
     tamanios = []

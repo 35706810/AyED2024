@@ -66,6 +66,7 @@ class ListaDobleEnlazada:
 
             self.tamanio += 1
 
+
     def extraer(self, posicion=None):
         if self.tamanio == 0:
             raise Exception("La lista está vacía")
@@ -125,11 +126,9 @@ class ListaDobleEnlazada:
             return
 
         if self.cabeza is None:
-         
             self.cabeza = otra_lista.cabeza
             self.cola = otra_lista.cola
         else:
-           
             self.cola.siguiente = otra_lista.cabeza
             otra_lista.cabeza.anterior = self.cola
             self.cola = otra_lista.cola
@@ -144,12 +143,10 @@ class ListaDobleEnlazada:
     def __add__(self, otra_lista):
         nueva_lista = ListaDobleEnlazada()
         
-       
         nodo_actual = self.cabeza
         while nodo_actual:
             nueva_lista.agregar_al_final(nodo_actual.dato)
             nodo_actual = nodo_actual.siguiente
-        
         
         nodo_actual = otra_lista.cabeza
         while nodo_actual:
