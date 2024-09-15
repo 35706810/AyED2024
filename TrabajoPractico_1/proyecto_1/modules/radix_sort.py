@@ -25,3 +25,4 @@ def counting_sort(lista, exp):
 
     for i in range(n):
         lista[i] = salida[i]
+#   O(nk), donde n es el número de elementos en la lista y k es el número de dígitos en el valor máximo.

@@ -5,3 +5,4 @@ def burbuja(arr):
             if arr[j] > arr[j+1]:
                 arr[j], arr[j+1] = arr[j+1], arr[j]
     return arr
+#O(n^2) en el peor caso y en el caso promedio, donde n es el número de elementos en la lista.
