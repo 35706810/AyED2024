@@ -10,15 +10,18 @@ class ListaDobleEnlazada:
         self.cola = None
         self.tamanio = 0
 
+    # Complejidad: O(1) porque acceder al tamaño de la lista es una operación constante.
     def __len__(self):
         return self.tamanio
 
+    # Complejidad: O(n), donde n es el número de nodos en la lista, ya que debe iterar por todos los nodos para generar sus valores.
     def __iter__(self):
         nodo = self.cabeza
         while nodo:
             yield nodo.dato
             nodo = nodo.siguiente
 
+    # Complejidad: O(1) ya que se agrega un nuevo nodo al inicio sin tener que recorrer la lista.
     def agregar_al_inicio(self, dato):
         nuevo_nodo = Nodo(dato)
         if self.cabeza is None:
@@ -30,6 +33,7 @@ class ListaDobleEnlazada:
             self.cabeza = nuevo_nodo
         self.tamanio += 1
 
+    # Complejidad: O(1) ya que se agrega un nuevo nodo al final sin tener que recorrer la lista.
     def agregar_al_final(self, dato):
         nuevo_nodo = Nodo(dato)
         if self.cola is None:
@@ -41,6 +45,7 @@ class ListaDobleEnlazada:
             self.cola = nuevo_nodo
         self.tamanio += 1
 
+    # Complejidad: O(n) en el peor caso. Insertar en una posición específica requiere recorrer la lista hasta esa posición.
     def insertar(self, dato, posicion):
         if posicion < -self.tamanio or posicion > self.tamanio:
             raise Exception("Posición inválida")
@@ -61,12 +66,13 @@ class ListaDobleEnlazada:
 
             nuevo_nodo.siguiente = nodo_actual.siguiente
             nuevo_nodo.anterior = nodo_actual
-            nodo_actual.siguiente.anterior = nuevo_nodo
+            if nodo_actual.siguiente:
+                nodo_actual.siguiente.anterior = nuevo_nodo
             nodo_actual.siguiente = nuevo_nodo
 
             self.tamanio += 1
 
-
+    # Complejidad: O(n) en el peor caso, ya que extraer un nodo en una posición arbitraria implica recorrer la lista hasta esa posición.
     def extraer(self, posicion=None):
         if self.tamanio == 0:
             raise Exception("La lista está vacía")
@@ -101,11 +107,13 @@ class ListaDobleEnlazada:
 
             valor = nodo_actual.dato
             nodo_actual.anterior.siguiente = nodo_actual.siguiente
-            nodo_actual.siguiente.anterior = nodo_actual.anterior
+            if nodo_actual.siguiente:
+                nodo_actual.siguiente.anterior = nodo_actual.anterior
 
         self.tamanio -= 1
         return valor
 
+    # Complejidad: O(n) ya que es necesario recorrer toda la lista original para copiar cada nodo a la nueva lista.
     def copiar(self):
         lista_copia = ListaDobleEnlazada()
         nodo_actual = self.cabeza
@@ -114,6 +122,7 @@ class ListaDobleEnlazada:
             nodo_actual = nodo_actual.siguiente
         return lista_copia
 
+    # Complejidad: O(n), ya que se necesita recorrer toda la lista para invertir los punteros `siguiente` y `anterior` en cada nodo.
     def invertir(self):
         nodo_actual = self.cabeza
         while nodo_actual:
@@ -121,6 +130,7 @@ class ListaDobleEnlazada:
             nodo_actual = nodo_actual.anterior
         self.cabeza, self.cola = self.cola, self.cabeza
 
+    # Complejidad: O(1) si la lista actual está vacía, O(m) en el peor caso (donde m es el tamaño de `otra_lista`) ya que enlaza los nodos de ambas listas.
     def concatenar(self, otra_lista):
         if otra_lista.cabeza is None:
             return
@@ -130,31 +140,22 @@ class ListaDobleEnlazada:
             self.cola = otra_lista.cola
         else:
             self.cola.siguiente = otra_lista.cabeza
-            otra_lista.cabeza.anterior = self.cola
             self.cola = otra_lista.cola
 
         self.tamanio += otra_lista.tamanio
 
-        otra_lista.cabeza = None
-        otra_lista.cola = None
-        otra_lista.tamanio = 0
-
-
+    # Complejidad: O(n + m) donde n es el tamaño de la lista actual y m el tamaño de `otra_lista`, ya que debe recorrer ambas listas para agregar todos los elementos a una nueva lista.
     def __add__(self, otra_lista):
         nueva_lista = ListaDobleEnlazada()
-        
+
         nodo_actual = self.cabeza
         while nodo_actual:
             nueva_lista.agregar_al_final(nodo_actual.dato)
             nodo_actual = nodo_actual.siguiente
-        
+
         nodo_actual = otra_lista.cabeza
         while nodo_actual:
             nueva_lista.agregar_al_final(nodo_actual.dato)
             nodo_actual = nodo_actual.siguiente
-        
+
         return nueva_lista
-
-
-
-
