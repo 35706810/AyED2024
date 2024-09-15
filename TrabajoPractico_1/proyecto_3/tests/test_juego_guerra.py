@@ -6,7 +6,7 @@ Created on Sun Aug 21 11:23:53 2022
 """
 
 
-from TrabajoPractico_1.proyecto_3.juego_guerra import JuegoGuerra
+from juego_guerra import JuegoGuerra
 import unittest
 
 
