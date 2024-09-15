@@ -22,7 +22,7 @@ def medir_tiempos():
             start = time.time()
             burbuja(lista.copy())
             end = time.time()
-            tiempos_burbuja.append(end - start)
+            tiempos_burbuja.append((end - start) * 1000)  # Convertir a milisegundos
         else:
             tiempos_burbuja.append(None)
 
@@ -30,31 +30,31 @@ def medir_tiempos():
         start = time.time()
         quicksort(lista.copy())
         end = time.time()
-        tiempos_quicksort.append(end - start)
+        tiempos_quicksort.append((end - start) * 1000)  # Convertir a milisegundos
 
         # Medir tiempo de radix sort
         start = time.time()
         radix_sort(lista.copy())
         end = time.time()
-        tiempos_radix.append(end - start)
+        tiempos_radix.append((end - start) * 1000)  # Convertir a milisegundos
 
         # Medir tiempo de sorted (función built-in)
         start = time.time()
         sorted(lista.copy())
         end = time.time()
-        tiempos_sorted.append(end - start)
+        tiempos_sorted.append((end - start) * 1000)  # Convertir a milisegundos
 
     return tamaños, tiempos_burbuja, tiempos_quicksort, tiempos_radix, tiempos_sorted
 
 # Graficar los tiempos
 def graficar_tiempos(tamaños, tiempos_burbuja, tiempos_quicksort, tiempos_radix, tiempos_sorted):
-    plt.figure(figsize=(10, 6))
-    plt.plot(tamaños, tiempos_burbuja, label='Burbuja')
-    plt.plot(tamaños, tiempos_quicksort, label='Quicksort')
-    plt.plot(tamaños, tiempos_radix, label='Radix Sort')
-    plt.plot(tamaños, tiempos_sorted, label='Sorted (built-in)')
+    plt.figure(figsize=(12, 8))
+    plt.plot(tamaños, tiempos_burbuja, label='Burbuja (ms)')
+    plt.plot(tamaños, tiempos_quicksort, label='Quicksort (ms)')
+    plt.plot(tamaños, tiempos_radix, label='Radix Sort (ms)')
+    plt.plot(tamaños, tiempos_sorted, label='Sorted (built-in) (ms)')
     plt.xlabel('Tamaño de la lista')
-    plt.ylabel('Tiempo de ejecución (segundos)')
+    plt.ylabel('Tiempo de ejecución (milisegundos)')
     plt.title('Comparación de tiempos de ejecución de algoritmos de ordenamiento')
     plt.legend()
     plt.grid(True)
@@ -62,4 +62,18 @@ def graficar_tiempos(tamaños, tiempos_burbuja, tiempos_quicksort, tiempos_radix
 
 if __name__ == '__main__':
     tamaños, tiempos_burbuja, tiempos_quicksort, tiempos_radix, tiempos_sorted = medir_tiempos()
+    
+    # Imprimir tiempos de ejecución totales en consola
+    promedio_burbuja = [t for t in tiempos_burbuja if t is not None]
+    print(f"Tiempo promedio de Burbuja: {sum(promedio_burbuja) / len(promedio_burbuja):.2f} ms" if promedio_burbuja else "Burbuja no medido para tamaños mayores a 1000")
+
+    promedio_quicksort = sum(tiempos_quicksort) / len(tiempos_quicksort)
+    print(f"Tiempo promedio de Quicksort: {promedio_quicksort:.2f} ms")
+
+    promedio_radix = sum(tiempos_radix) / len(tiempos_radix)
+    print(f"Tiempo promedio de Radix Sort: {promedio_radix:.2f} ms")
+
+    promedio_sorted = sum(tiempos_sorted) / len(tiempos_sorted)
+    print(f"Tiempo promedio de Sorted (built-in): {promedio_sorted:.2f} ms")
+
     graficar_tiempos(tamaños, tiempos_burbuja, tiempos_quicksort, tiempos_radix, tiempos_sorted)
