@@ -8,7 +8,7 @@ def medir_tiempos():
     tiempos_copiar = []
     tiempos_invertir = []
 
-    for n in range(1, 100001, 100):  # Ajusta el rango según sea necesario
+    for n in range(1, 10001, 100):  # Ajusta el rango según sea necesario
         lista = ListaDobleEnlazada()
         for i in range(n):
             lista.agregar_al_final(i)
