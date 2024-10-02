@@ -16,9 +16,16 @@ class MonticuloMinimo:
         self._subir(len(self._monticulo) - 1)
 
     def _subir(self, i):
-        while i > 0 and self._monticulo[i].get_riesgo() < self._monticulo[self._padre(i)].get_riesgo():
+        while i > 0 and self._es_prioritario(self._monticulo[i], self._monticulo[self._padre(i)]):
             self._monticulo[i], self._monticulo[self._padre(i)] = self._monticulo[self._padre(i)], self._monticulo[i]
             i = self._padre(i)
+
+    def _es_prioritario(self, p1, p2):
+        """Determina si el paciente p1 tiene mayor prioridad que p2."""
+        if p1.get_riesgo() != p2.get_riesgo():
+            return p1.get_riesgo() < p2.get_riesgo()  # Menor riesgo tiene mayor prioridad
+        else:
+            return p1.get_numero_orden() < p2.get_numero_orden()  # Si tienen el mismo riesgo, priorizar por orden de llegada
 
     def extraer_minimo(self):
         if len(self._monticulo) == 0:
@@ -36,9 +43,9 @@ class MonticuloMinimo:
             hijo_der = self._hijo_derecho(i)
             menor = i
 
-            if hijo_izq < len(self._monticulo) and self._monticulo[hijo_izq].get_riesgo() < self._monticulo[menor].get_riesgo():
+            if hijo_izq < len(self._monticulo) and self._es_prioritario(self._monticulo[hijo_izq], self._monticulo[menor]):
                 menor = hijo_izq
-            if hijo_der < len(self._monticulo) and self._monticulo[hijo_der].get_riesgo() < self._monticulo[menor].get_riesgo():
+            if hijo_der < len(self._monticulo) and self._es_prioritario(self._monticulo[hijo_der], self._monticulo[menor]):
                 menor = hijo_der
 
             if menor == i:

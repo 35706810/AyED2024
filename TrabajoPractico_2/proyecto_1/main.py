@@ -1,4 +1,3 @@
-# main.py
 # -*- coding: utf-8 -*-
 """
 Sala de emergencias
@@ -25,21 +24,21 @@ for i in range(n):
     # Se crea un paciente
     paciente = pac.Paciente()
     monticulo_pacientes.insertar(paciente)
+    print('Paciente ingresado:', paciente)
 
     # Atención de paciente en este ciclo: en el 50% de los casos
     if random.random() < 0.5:
-        # Se atiende al paciente con menor riesgo
+        # Se atiende al paciente con menor riesgo y más antiguo
         paciente_atendido = monticulo_pacientes.extraer_minimo()
         print('*'*40)
-        print('Se atiende el paciente:', paciente_atendido)
+        print('Se atiende al paciente:', paciente_atendido)
         print('*'*40)
     else:
-        # Se continúa atendiendo paciente de ciclo anterior
         pass
     
     print()
 
-    # Se muestran los pacientes restantes en el montículo
+    # Mostrar pacientes restantes en el montículo
     print('Pacientes que faltan atenderse:', len(monticulo_pacientes))
     for paciente in monticulo_pacientes._monticulo:
         print('\t', paciente)
