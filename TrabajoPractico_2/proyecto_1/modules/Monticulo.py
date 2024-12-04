@@ -1,60 +1,108 @@
-class MonticuloMinimo:
+import math
+
+class MonticuloBinario: 
+    """
+    Montículo Binario Mínimo en el que la clave más pequeña está siempre en el frente, 
+    pues los niveles de gravedad van de 1 a 3.
+    """
     def __init__(self):
-        self._monticulo = []
+        self.__lista_monticulo = [-math.inf]  # Elemento inicial ficticio para simplificar los cálculos de índices
+        self.__tamano_actual = 0
 
-    def _padre(self, i):
-        return (i - 1) // 2
+    # Métodos privados (detalles internos de implementación)
+    def __infilt_arriba(self, i): 
+        """
+        Subir un elemento en el montículo para mantener la propiedad del montículo mínimo.
+        """
+        while i // 2 > 0:
+            if self.__lista_monticulo[i] < self.__lista_monticulo[i // 2]:
+                self.__lista_monticulo[i], self.__lista_monticulo[i // 2] = self.__lista_monticulo[i // 2], self.__lista_monticulo[i]
+            i = i // 2
 
-    def _hijo_izquierdo(self, i):
-        return 2 * i + 1
-
-    def _hijo_derecho(self, i):
-        return 2 * i + 2
-
-    def insertar(self, paciente):
-        self._monticulo.append(paciente)
-        self._subir(len(self._monticulo) - 1)
-
-    def _subir(self, i):
-        while i > 0 and self._es_prioritario(self._monticulo[i], self._monticulo[self._padre(i)]):
-            self._monticulo[i], self._monticulo[self._padre(i)] = self._monticulo[self._padre(i)], self._monticulo[i]
-            i = self._padre(i)
-
-    def _es_prioritario(self, p1, p2):
-        """Determina si el paciente p1 tiene mayor prioridad que p2."""
-        if p1.get_riesgo() != p2.get_riesgo():
-            return p1.get_riesgo() < p2.get_riesgo()  # Menor riesgo tiene mayor prioridad
+    def __infilt_abajo(self, i): 
+        """
+        Bajar un elemento en el montículo para mantener la propiedad del montículo mínimo.
+        """
+        while (i * 2) <= self.__tamano_actual:
+            hm = self.__hijo_min(i)
+            if self.__lista_monticulo[i] > self.__lista_monticulo[hm]:
+                self.__lista_monticulo[i], self.__lista_monticulo[hm] = self.__lista_monticulo[hm], self.__lista_monticulo[i]
+            i = hm
+            
+    def __hijo_min(self, i): 
+        """
+        Determinar el índice del hijo menor de un nodo.
+        """
+        if i * 2 + 1 > self.__tamano_actual:
+            return i * 2
         else:
-            return p1.get_numero_orden() < p2.get_numero_orden()  # Si tienen el mismo riesgo, priorizar por orden de llegada
+            if self.__lista_monticulo[i * 2] < self.__lista_monticulo[i * 2 + 1]:
+                return i * 2
+            else:
+                return i * 2 + 1
 
-    def extraer_minimo(self):
-        if len(self._monticulo) == 0:
+    # Métodos públicos (interfaz de usuario)
+    def insertar(self, k):
+        """
+        Agregar un elemento al montículo.
+        Recibe un elemento k.
+        """ 
+        self.__lista_monticulo.append(k)
+        self.__tamano_actual += 1
+        self.__infilt_arriba(self.__tamano_actual)
+
+    def eliminar_min(self): 
+        """
+        Eliminar y devolver el valor mínimo del montículo (la raíz).
+        """
+        if self.esta_vacio():
+            raise IndexError("No se puede eliminar de un montículo vacío.")
+        
+        valor_sacado = self.__lista_monticulo[1]
+        self.__lista_monticulo[1] = self.__lista_monticulo[self.__tamano_actual]
+        self.__tamano_actual -= 1
+        self.__lista_monticulo.pop()
+        self.__infilt_abajo(1)
+        return valor_sacado
+    
+    def buscar_min(self): 
+        """
+        Devolver el valor mínimo del montículo sin eliminarlo.
+        """
+        if self.esta_vacio():
             return None
-        if len(self._monticulo) == 1:
-            return self._monticulo.pop()
-        raiz = self._monticulo[0]
-        self._monticulo[0] = self._monticulo.pop()
-        self._bajar(0)
-        return raiz
+        return self.__lista_monticulo[1]
+        
+    def esta_vacio(self): 
+        """
+        Devolver True si el montículo está vacío, False en caso contrario.
+        """
+        return self.__tamano_actual == 0
 
-    def _bajar(self, i):
-        while True:
-            hijo_izq = self._hijo_izquierdo(i)
-            hijo_der = self._hijo_derecho(i)
-            menor = i
+    def construir_monticulo(self, una_lista): 
+        """
+        Organizar una lista inicial en forma de montículo.
+        """
+        i = len(una_lista) // 2
+        self.__tamano_actual = len(una_lista)
+        self.__lista_monticulo = [-math.inf] + una_lista[:]  # Mantener el primer elemento ficticio
+        while i > 0:
+            self.__infilt_abajo(i)
+            i -= 1
 
-            if hijo_izq < len(self._monticulo) and self._es_prioritario(self._monticulo[hijo_izq], self._monticulo[menor]):
-                menor = hijo_izq
-            if hijo_der < len(self._monticulo) and self._es_prioritario(self._monticulo[hijo_der], self._monticulo[menor]):
-                menor = hijo_der
+    # Propiedades públicas
+    @property
+    def tamano(self):
+        """
+        Tamaño actual del montículo.
+        """ 
+        return self.__tamano_actual
 
-            if menor == i:
-                break
-            self._monticulo[i], self._monticulo[menor] = self._monticulo[menor], self._monticulo[i]
-            i = menor
+    @property
+    def lista_monticulo(self):
+        """
+        Copia de la lista interna del montículo.
+        """
+        return self.__lista_monticulo.copy()
 
-    def esta_vacio(self):
-        return len(self._monticulo) == 0
-
-    def __len__(self):
-        return len(self._monticulo)
+    
